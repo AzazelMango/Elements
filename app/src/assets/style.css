@@ -1,0 +1,1643 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  ::-webkit-scrollbar {width: 8px;}
+  ::-webkit-scrollbar-track {background: transparent;}
+  ::-webkit-scrollbar-thumb {background: var(--border-dim); border-radius: 4px; border: 2px solid var(--accent-gold); background-clip: content-box;}
+}
+
+:root {
+  --bg-primary:       #150e24; --bg-primary-dim:   #150e2488;
+  --bg-secondary:     #0a0a2c; --bg-secondary-dim: #0a0a2c88;
+  --bg-tertiary:      #3d3a48; --bg-tertiary-dim:  #3d3a4888;
+  
+   
+  --accent-gold:      #c8a043;
+  --accent-dim:       #7a6030;
+  --accent-shadow:    #c8a04333;
+   
+  --bg-card:          #5e490a;
+  --border-primary:   #3a3a47;
+  --border-dim:       #2a2a40;
+   
+  --text-primary:     #d5d5e6;
+  --text-secondary:   #5a5a6e;
+  --text-muted:       #7c7c7c;
+
+  --danger-primary:   #e35656;
+  --danger-hover:     #9a3030;
+  --danger-active:    #7a2020;
+  --danger-dim:       #c040401f;
+
+  --arch-stable:   #4caf7d; --arch-stable-dim: #4caf7d1f;
+  --arch-volatile: #c8a043; --arch-volatile-dim: #c8a0431f;
+  --arch-arcane:   #7a5ac0; --arch-arcane-dim: #7a5ac01f;
+
+  --fre: #b31515; --fre-dim: #b315151f;
+  --elc: #e19c11; --elc-dim: #e19c111f;
+  --air: #f1f7f8; --air-dim: #f1f7f81f;
+  --wtr: #1c4598; --wtr-dim: #1c45981f;
+  --nat: #177717; --nat-dim: #1777171f;
+  --mtl: #c1cfd4; --mtl-dim: #c1cfd41f;
+  --stn: #79716a; --stn-dim: #79716a1f;
+  --ice: #7ad1e3; --ice-dim: #7ad1e31f;
+  --cry: #8c25a1; --cry-dim: #8c25a11f;
+  --vod: #440d77; --vod-dim: #440d771f;
+  --lit: #e2d32b; --lit-dim: #e2d32b1f;
+  
+}
+
+html, body {
+  height: 100%;
+  background: linear-gradient(to bottom right, var(--bg-primary), var(--bg-secondary));
+  color: var(--text-primary);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ── Views ─────────────────────────────────────── */
+
+.view {
+  display: none;
+  position: absolute;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.view.active {
+  display: flex;
+}
+
+/* ── Main Menu ──────────────────────────────────── */
+
+.game-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.game-title {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 0.45em;
+  color: var(--accent-gold);
+  text-shadow: 0 0 48px var(--accent-shadow);
+}
+
+.game-subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.main-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 260px;
+}
+
+/* ── Menu shell (primary col + cascading submenus) ─ */
+
+.menu-shell {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: 0.75rem;
+  background: var(--bg-tertiary-dim);
+  border-radius: 6px;
+}
+
+.menu-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 260px;
+  flex-shrink: 0;
+}
+
+/* Submenu wrapper — controls the reveal animation */
+.menu-submenu {
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: max-width 0.22s ease, opacity 0.18s ease;
+}
+
+.menu-submenu.open {
+  max-width: 320px;   /* larger than content; transition drives the wipe */
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Inner column — fixed width, always laid out */
+.submenu-inner {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding-left: 1.1rem;
+  margin-left: 0.25rem;
+  border-left: 1px solid var(--border-dim);
+}
+
+.submenu-title {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.submenu-title--gap { margin-top: 0.5rem; }
+
+.submenu-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.sub-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.sub-select {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  padding: 0.38rem 0.55rem;
+  font-size: 0.88rem;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.12s;
+}
+
+.sub-select:focus { border-color: var(--accent-dim); }
+
+.sub-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sub-slider-row input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border-dim);
+  outline: none;
+  cursor: pointer;
+}
+
+.sub-slider-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--accent-gold);
+  cursor: pointer;
+}
+
+.sub-slider-val {
+  font-size: 0.78rem;
+  font-family: monospace;
+  color: var(--accent-gold);
+  min-width: 4.2rem;
+  text-align: right;
+}
+
+.sub-placeholder {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Inline label row (checkbox + text) */
+.sub-label--row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+
+.sub-checkbox {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--accent-gold);
+  flex-shrink: 0;
+}
+
+.sub-note {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-left: 0.15rem;
+}
+
+/* Active state: primary button whose submenu is open */
+.menu-btn.submenu-active {
+  background: var(--bg-secondary);
+  border-left-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+/* Call-to-action variant (Start Battle etc.) */
+.menu-btn--action {
+  border-color: var(--accent-dim);
+  color: var(--accent-gold);
+  margin-top: 0.15rem;
+}
+
+.menu-btn--action:hover {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+.menu-btn {
+  padding: 0.85rem 1.5rem;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-dim);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.menu-btn:hover {
+  background: var(--bg-secondary);
+  border-color: var(--accent-dim);
+  color: var(--accent-gold);
+}
+
+.menu-btn--danger:hover {
+  background: var(--danger-hover);
+  border-color: var(--danger-primary);
+  color: var(--danger-active);
+}
+
+/* ── Sub-view chrome ────────────────────────────── */
+
+.view-header {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.view-header h2 {
+  font-size: 1.4rem;
+  letter-spacing: 0.15em;
+  color: var(--accent-gold);
+}
+
+.back-btn {
+  background: none;
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.back-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-dim);
+}
+
+/* ── Confirm modal ───────────────────────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.modal-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 1.5rem 1.75rem;
+  min-width: 280px;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+}
+
+.modal-body {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.modal-body:empty { display: none; }
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.view-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.placeholder {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+}
+
+/* ── Utility ────────────────────────────────────── */
+
+.hidden { display: none !important; }
+
+
+/* ── Builder layout ─────────────────────────────── */
+
+#view-builder {
+  align-items: stretch;
+  justify-content: flex-start;
+  padding-top: 3.5rem;
+}
+
+.builder-layout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.builder-body {
+  width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.builder-main {
+  width: 70%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.builder-panel {
+  width: 30%;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-dim);
+  background: var(--bg-tertiary-dim);
+  overflow: hidden;
+}
+
+/* ── Top control bar ────────────────────────────── */
+
+.builder-top-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 1rem;
+  border-bottom: 1px solid var(--border-dim);
+  flex-shrink: 0;
+}
+
+.builder-team-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.team-select {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+  max-width: 160px;
+}
+
+.team-select:focus { border-color: var(--accent-dim); }
+
+.team-name-input {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-dim);
+  color: var(--text-primary);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.88rem;
+  width: 190px;
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.team-name-input:focus { border-color: var(--accent-dim); }
+
+.builder-form-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+/* ── No-draft placeholder ───────────────────────── */
+
+.builder-no-draft {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+}
+
+/* ── Golem card row ─────────────────────────────── */
+
+.golem-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.1rem 1.5rem;
+  flex-shrink: 0;
+}
+
+.golem-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  background: linear-gradient(160deg, var(--dom-dim, var(--bg-card)) 0%, var(--pas-dim, var(--bg-card)) 100%);
+  border: 1px solid var(--border-dim);
+  border-radius: 6px;
+  padding: 0.9rem 1.1rem;
+  min-width: 175px;
+  flex: 1;
+  max-width: 215px;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.golem-card.arch-stable   { border-color: var(--arch-stable);   }
+.golem-card.arch-volatile { border-color: var(--arch-volatile); }
+.golem-card.arch-arcane   { border-color: var(--arch-arcane);   }
+
+.golem-card.drag-over {
+  border-color: var(--accent-gold) !important;
+  box-shadow: 0 0 14px rgba(200, 160, 67, 0.35);
+}
+
+.golem-card-title {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  align-self: flex-start;
+}
+
+/* ── Element row (DOM / PAS slots inside Golem card) */
+
+.golem-element-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.slot-sep {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.golem-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 82px;
+  height: 96px;
+  position: relative;
+  transition: border-color 0.12s, background 0.12s;
+  border-radius: 4px;
+}
+
+.golem-slot--empty {
+  border: 1px dashed var(--border-dim);
+  gap: 0.3rem;
+}
+
+.golem-slot--filled {
+  border: none;
+  padding: 0;
+}
+
+.golem-slot.drag-over {
+  border-color: var(--accent-gold) !important;
+  background: rgba(200, 160, 67, 0.1) !important;
+}
+
+.slot-role-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.slot-hint {
+  font-size: 0.62rem;
+  color: var(--border-dim);
+  letter-spacing: 0.06em;
+}
+
+/* ── Golem stats ────────────────────────────────── */
+
+.golem-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  border-top: 1px solid var(--border-dim);
+  padding-top: 0.55rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.73rem;
+}
+
+.stat-label { color: var(--text-muted); letter-spacing: 0.06em; }
+.stat-value { color: var(--text-primary); font-family: monospace; }
+
+/* ── Builder panel sections ─────────────────────── */
+
+.panel-section {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.panel-section--elements {
+  border-bottom: 1px solid var(--border-dim);
+  overflow-y: auto;
+  max-height: 52%;
+}
+
+.panel-section--moves {
+  flex: 1;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-section-hdr {
+  font-size: 0.64rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.35rem 0.6rem;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+/* ── Archetype groups in element bay ─────────────── */
+
+.arch-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.arch-group-hdr {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.55rem;
+  border-left: 2px solid transparent;
+}
+
+.arch-group--stable   .arch-group-hdr { color: var(--arch-stable);   border-left-color: var(--arch-stable);   }
+.arch-group--volatile .arch-group-hdr { color: var(--arch-volatile); border-left-color: var(--arch-volatile); }
+.arch-group--arcane   .arch-group-hdr { color: var(--arch-arcane);   border-left-color: var(--arch-arcane);   }
+
+.arch-group-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0.3rem;
+  padding: 0.3rem 0.4rem 0.42rem;
+}
+
+.bay-cards {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* ── Moves filter bar ───────────────────────────── */
+
+.moves-filter-bar {
+  padding: 0.32rem 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.mf-arch-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.mf-el-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.18rem;
+}
+
+.mf-pill {
+  padding: 0.13rem 0.36rem;
+  font-size: 0.63rem;
+  letter-spacing: 0.06em;
+  text-transform: capitalize;
+  border: 1px solid var(--border-dim);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: color 0.1s, border-color 0.1s, background 0.1s;
+}
+
+.mf-pill:hover { color: var(--text-primary); border-color: var(--accent-dim); }
+
+.mf-pill--active {
+  background: var(--accent-dim);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.mf-pill--valid { margin-left: auto; }
+
+.mf-el-pill {
+  padding: 0.1rem 0.26rem;
+  font-size: 0.58rem;
+  font-family: monospace;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--el-color, var(--border-dim));
+  background: color-mix(in srgb, var(--el-color, var(--bg-secondary)) 12%, transparent);
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: filter 0.1s;
+}
+
+.mf-el-pill:hover { filter: brightness(1.35); }
+.mf-el-pill--active { background: color-mix(in srgb, var(--el-color, var(--bg-secondary)) 32%, transparent); }
+
+/* ── Moves list ─────────────────────────────────── */
+
+.moves-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.28rem 0.32rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.moves-empty {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 0.9rem 0.5rem;
+}
+
+.moves-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  padding: 0.26rem 0.32rem;
+  cursor: default;
+  transition: border-color 0.1s, background 0.1s;
+}
+
+.moves-card:hover {
+  border-color: var(--accent-dim);
+  background: var(--bg-tertiary);
+}
+
+.mc-top {
+  display: flex;
+  align-items: center;
+  gap: 0.26rem;
+  margin-bottom: 0.14rem;
+}
+
+.mc-badge {
+  font-size: 0.54rem;
+  font-family: monospace;
+  font-weight: 700;
+  padding: 0.05rem 0.2rem;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--el-color, var(--border-dim));
+  background: color-mix(in srgb, var(--el-color, var(--bg-tertiary)) 22%, transparent);
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.mc-badge.arch-stable   { --el-color: var(--arch-stable);   }
+.mc-badge.arch-volatile { --el-color: var(--arch-volatile); }
+.mc-badge.arch-arcane   { --el-color: var(--arch-arcane);   }
+.mc-badge.mc-badge--gen { --el-color: var(--text-secondary); }
+
+.mc-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mc-pwr {
+  font-size: 0.6rem;
+  font-family: monospace;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.mc-rarity {
+  font-size: 0.56rem;
+  font-family: monospace;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.mc-rarity--common   { color: var(--text-muted);     }
+.mc-rarity--moderate { color: var(--arch-volatile);  }
+.mc-rarity--rare     { color: var(--arch-arcane);    }
+
+.mc-effect {
+  font-size: 0.59rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ── Bidirectional hover highlights ─────────────── */
+
+/* Hovering a move card → this golem can use it */
+.golem-card.golem-move-highlight {
+  outline: 2px solid var(--arch-volatile);
+  outline-offset: 2px;
+  box-shadow: 0 0 10px var(--arch-volatile-dim);
+}
+
+/* Hovering a golem → these moves are valid for it */
+.moves-card.move-golem-highlight {
+  border-color: var(--accent-gold);
+  background: color-mix(in srgb, var(--accent-gold) 7%, var(--bg-secondary));
+}
+
+/* ── Golem card selection ────────────────────────── */
+
+.golem-card--selected {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+  box-shadow: 0 0 14px var(--accent-shadow);
+}
+
+/* Move card dragged over a golem card (whole-card drop zone) */
+.golem-card.drag-over-move {
+  outline: 2px dashed var(--accent-gold);
+  outline-offset: 3px;
+  background: color-mix(in srgb, var(--accent-gold) 6%, var(--bg-card));
+}
+
+/* ── Golem move list (inside golem card) ─────────── */
+
+.golem-move-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  border-top: 1px solid var(--border-dim);
+  padding-top: 0.42rem;
+  margin-top: 0.1rem;
+}
+
+.golem-move-list-hdr {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gmh-count {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 0.6rem;
+}
+
+.golem-move-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.63rem;
+  gap: 0.25rem;
+}
+
+.golem-move-chip--empty {
+  color: var(--border-dim);
+  justify-content: center;
+  font-size: 0.7rem;
+  border-style: dashed;
+}
+
+.gmc-name {
+  color: var(--text-primary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gmc-rm {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.6rem;
+  padding: 0 0.1rem;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.1s;
+}
+.gmc-rm:hover { color: var(--danger-primary); }
+
+/* ── Moves list: assigned + selectable states ──── */
+
+.moves-assign-hint {
+  font-size: 0.62rem;
+  color: var(--accent-gold);
+  padding: 0.2rem 0.1rem 0.3rem;
+  opacity: 0.8;
+}
+
+.moves-card--assigned {
+  border-color: var(--accent-gold);
+  background: color-mix(in srgb, var(--accent-gold) 10%, var(--bg-secondary));
+}
+
+.moves-card--selectable {
+  cursor: pointer;
+}
+
+.moves-card--selectable:hover {
+  border-color: var(--accent-dim);
+}
+
+/* ── Bay cards (draggable element cards) ────────── */
+
+/* ── Unified element card ─────────────────────────────────────────────────── */
+
+.elem-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  /* 18% element tint over the dark base — opaque, readable, colour-coded */
+  background: color-mix(in srgb, var(--el-color, var(--bg-secondary)) 18%, var(--bg-secondary));
+  border: 2px solid var(--el-color, var(--border-dim));
+  border-radius: 4px;
+  cursor: grab;
+  padding: 0.25rem 0.15rem;
+  position: relative;
+  transition: filter 0.1s, opacity 0.1s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.arch-group-grid .elem-card { width: 72px; height: 86px; }
+.golem-slot .elem-card { width: 100%; height: 100%; }
+
+.elem-card:hover:not(.elem-card--spent) { filter: brightness(1.2); }
+.elem-card:active:not(.elem-card--spent) { cursor: grabbing; }
+.elem-card.dragging { opacity: 0.25; }
+
+.elem-card--spent {
+  opacity: 0.22;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+/* Icon placeholder (swap for SVG later) */
+.ec-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ec-icon-placeholder {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--el-color, var(--text-muted));
+  /* fully opaque — the dot is the primary colour indicator */
+  opacity: 1;
+  box-shadow: 0 0 6px var(--el-color, transparent);
+}
+
+/* ID always uses primary text — some element colours are too dark for legibility */
+.ec-id {
+  font-family: monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  /* subtle coloured glow keeps the element flavour without sacrificing contrast */
+  text-shadow: 0 0 10px var(--el-color, transparent);
+}
+
+.ec-name {
+  font-size: 0.58rem;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.2;
+  opacity: 0.85;
+}
+
+/* Stack counter badge \u2014 bottom-right corner, only rendered when avail > 1 */
+.bay-stack-count {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  font-size: 0.58rem;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--bg-primary);
+  background: var(--accent-gold);
+  border-radius: 4px;
+  padding: 0.05rem 0.22rem;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+/* ── Per-element colour classes ──────────────────────────────────────────── */
+
+.el-fre { --el-color: var(--fre); --el-dim: var(--fre-dim); }
+.el-elc { --el-color: var(--elc); --el-dim: var(--elc-dim); }
+.el-air { --el-color: var(--air); --el-dim: var(--air-dim); }
+.el-wtr { --el-color: var(--wtr); --el-dim: var(--wtr-dim); }
+.el-nat { --el-color: var(--nat); --el-dim: var(--nat-dim); }
+.el-mtl { --el-color: var(--mtl); --el-dim: var(--mtl-dim); }
+.el-stn { --el-color: var(--stn); --el-dim: var(--stn-dim); }
+.el-ice { --el-color: var(--ice); --el-dim: var(--ice-dim); }
+.el-cry { --el-color: var(--cry); --el-dim: var(--cry-dim); }
+.el-vod { --el-color: var(--vod); --el-dim: var(--vod-dim); }
+.el-lit { --el-color: var(--lit); --el-dim: var(--lit-dim); }
+
+/* ── Buttons ────────────────────────────────────── */
+
+.btn-sm {
+  padding: 0.26rem 0.52rem;
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+}
+
+.btn-sm:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-dim);
+}
+
+.btn-primary {
+  padding: 0.42rem 1rem;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+.btn-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-danger {
+  padding: 0.42rem 1rem;
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+
+.btn-danger:hover {
+  background: var(--danger-hover);
+  border-color: #c04040;
+  color: #fff;
+}
+
+/* ── Primary team star button ───────────────────── */
+
+.btn-star {
+  padding: 0.28rem 0.55rem;
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+  flex-shrink: 0;
+}
+
+.btn-star:hover:not(:disabled) {
+  color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
+.btn-star--active {
+  color: var(--accent-gold) !important;
+  border-color: var(--accent-gold) !important;
+}
+
+.btn-star:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── Move DnD: panel card dragging ──────────────── */
+
+.moves-card[draggable] { cursor: grab; }
+.moves-card[draggable]:active { cursor: grabbing; }
+
+.mc-dragging {
+  opacity: 0.35;
+  outline: 1px dashed var(--border-dim);
+}
+
+/* ── Move DnD: golem column drop zones ──────────── */
+
+.golem-move-list.move-list-drag-over {
+  outline: 2px dashed var(--accent-gold);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--accent-gold) 5%, transparent);
+}
+
+.golem-move-chip.chip-drag-over {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 1px;
+  background: color-mix(in srgb, var(--accent-gold) 15%, var(--bg-secondary));
+}
+
+.golem-move-chip[draggable] { cursor: grab; }
+.golem-move-chip[draggable]:active { cursor: grabbing; }
+
+/* ── Battle view ─────────────────────────────────────────── */
+
+#view-battle {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.battle-layout {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────── */
+
+.battle-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-dim);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.bs-top {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.bs-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.bs-stat-label {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.bs-stat-value {
+  font-family: monospace;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.bs-timer {
+  font-family: monospace;
+  font-size: 1.3rem;
+  color: var(--accent-gold);
+}
+
+.bs-log-header {
+  padding: 0.3rem 0.9rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-dim);
+  flex-shrink: 0;
+}
+
+.battle-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.4rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.log-entry   { font-size: 0.68rem; font-family: monospace; line-height: 1.45; }
+.log-round   { color: var(--accent-dim); font-weight: 600; padding-top: 0.2rem; }
+.log-action  { color: var(--text-muted); }
+.log-victory { color: #4caf7d; font-weight: 600; }
+.log-defeat  { color: #c04040; font-weight: 600; }
+
+/* ── Battle main area ────────────────────────────────────── */
+
+.battle-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ── Arena ─────────────────────────────────────────────────── */
+
+.battle-arena {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 50%,
+    rgba(200,160,67,0.03) 0%, transparent 70%);
+}
+
+.arena-enemy-row,
+.arena-player-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.arena-svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+
+/* ── Arena Golem cards ──────────────────────────────────── */
+
+.arena-golem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  padding: 0.8rem 1rem;
+  width: 145px;
+  cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.15s;
+  position: relative;
+}
+
+.ag-enemy:hover  { border-color: var(--arch-volatile); }
+.ag-player:hover { border-color: var(--accent-dim); }
+
+.ag-selected {
+  border-color: var(--accent-gold) !important;
+  box-shadow: 0 0 18px rgba(200, 160, 67, 0.28);
+}
+
+.ag-defeated {
+  opacity: 0.3;
+  cursor: default;
+  border-style: dashed;
+  pointer-events: none;
+}
+
+.ag-pairing {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ag-el {
+  font-family: monospace;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ag-el.arch-stable   { color: var(--arch-stable);   }
+.ag-el.arch-volatile { color: var(--arch-volatile); }
+.ag-el.arch-arcane   { color: var(--arch-arcane);   }
+
+.ag-sep {
+  font-size: 0.8rem;
+  color: var(--border-dim);
+}
+
+.ag-hp-bar {
+  width: 100%;
+  height: 7px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-dim);
+}
+
+.ag-hp-fill {
+  height: 100%;
+  transition: width 0.4s ease;
+}
+
+.hp-hi  { background: #4caf7d; }
+.hp-mid { background: #c8a043; }
+.hp-lo  { background: #c04040; }
+
+.ag-hp-num {
+  font-size: 0.63rem;
+  font-family: monospace;
+  color: var(--text-muted);
+}
+
+.ag-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  justify-content: center;
+  min-height: 1rem;
+}
+
+.ag-badge {
+  font-size: 0.58rem;
+  font-family: monospace;
+  padding: 0.06rem 0.22rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-dim);
+  color: var(--accent-gold);
+}
+
+/* ── Damage float ───────────────────────────────────────── */
+
+@keyframes damageFloat {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-52px); }
+}
+
+.damage-float {
+  position: absolute;
+  animation: damageFloat 0.92s ease forwards;
+  color: #ff5c5c;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: monospace;
+  pointer-events: none;
+  z-index: 10;
+  text-shadow: 0 0 10px rgba(255, 92, 92, 0.7);
+}
+
+/* ── Battle bottom bar ─────────────────────────────────── */
+
+.battle-bottom {
+  height: 200px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Card hand ───────────────────────────────────────────── */
+
+.battle-hand {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.25rem;
+  border-right: 1px solid var(--border-dim);
+}
+
+.hand-card {
+  width: 76px;
+  height: 108px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem;
+  cursor: pointer;
+  transition: border-color 0.12s, transform 0.15s;
+  text-align: center;
+}
+
+.hand-card:hover {
+  border-color: var(--accent-dim);
+  transform: translateY(-6px);
+}
+
+.hc-name {
+  font-size: 0.68rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+/* ── Action panel ───────────────────────────────────────── */
+
+.battle-action-panel {
+  width: 290px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.6rem 0.75rem 0.55rem;
+  gap: 0.38rem;
+  overflow: hidden;
+}
+
+.bap-hint {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.action-planner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.ap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.ap-golem-label {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  font-family: monospace;
+}
+
+.ap-remaining {
+  font-size: 0.65rem;
+  font-family: monospace;
+  color: var(--text-muted);
+}
+
+.ap-bar-track {
+  height: 5px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-dim);
+  flex-shrink: 0;
+}
+
+.ap-bar-fill {
+  height: 100%;
+  background: var(--accent-gold);
+  transition: width 0.22s ease;
+}
+
+/* ── Tier buttons ────────────────────────────────────────── */
+
+.ap-tier-row {
+  display: flex;
+  gap: 0.22rem;
+  flex-shrink: 0;
+}
+
+.tier-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.08rem;
+  padding: 0.3rem 0.1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.tier-btn small {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+.tier-btn.active {
+  background: var(--bg-card);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.tier-btn.active small { color: var(--accent-dim); }
+.tier-btn:disabled     { opacity: 0.32; cursor: not-allowed; }
+
+.tier-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--accent-dim);
+  color: var(--text-primary);
+}
+
+/* ── Action queue ────────────────────────────────────────── */
+
+.ap-queue {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-height: 0;
+}
+
+.queue-hint-text {
+  font-size: 0.67rem;
+  color: var(--text-muted);
+  padding: 0.2rem 0;
+  font-style: italic;
+}
+
+.queue-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  padding: 0.12rem 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.qi-tier {
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  padding: 0.08rem 0.28rem;
+  border: 1px solid var(--border-dim);
+  text-transform: capitalize;
+  flex-shrink: 0;
+}
+
+.qi-quick    { border-color: var(--arch-stable);   color: var(--arch-stable);   }
+.qi-standard { border-color: var(--text-muted);    color: var(--text-muted);    }
+.qi-charged  { border-color: var(--arch-volatile); color: var(--arch-volatile); }
+.qi-focused  { border-color: var(--arch-arcane);   color: var(--arch-arcane);   }
+
+.qi-arrow  { color: var(--text-muted); }
+.qi-target { flex: 1; color: var(--text-primary); }
+.qi-cost   { font-family: monospace; font-size: 0.62rem; color: var(--text-muted); }
+
+.qi-rm {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.68rem;
+  padding: 0 0.12rem;
+  transition: color 0.1s;
+}
+
+.qi-rm:hover { color: #ff5c5c; }
+
+/* ── Ready button ────────────────────────────────────────── */
+
+.battle-ready-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-size: 0.88rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s, color 0.12s;
+}
+
+.battle-ready-btn:hover:not(:disabled) {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
+.battle-ready-btn:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}

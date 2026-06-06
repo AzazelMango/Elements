@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <title>Elements</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- Main Menu -->
+  <div id="view-menu" class="view active">
+    <header class="game-header">
+      <h1 class="game-title">GOLEMENTALS</h1>
+      <p class="game-subtitle">Elemental Golem Battle Simulator</p>
+    </header>
+
+    <div class="menu-shell">
+
+      <!-- Primary column -->
+      <nav class="menu-col" id="menu-col-primary">
+        <button class="menu-btn"
+                data-submenu="submenu-play" data-submenu-depth="1">Play</button>
+        <button class="menu-btn" data-view="view-builder">Golem Team Builder</button>
+        <button class="menu-btn"
+                data-submenu="submenu-settings" data-submenu-depth="1">Settings</button>
+        <button class="menu-btn" data-view="view-wiki">Wiki</button>
+        <button class="menu-btn menu-btn--danger" id="btn-quit">Exit</button>
+      </nav>
+
+      <!-- Submenu: Play / Battle Settings -->
+      <div class="menu-submenu" id="submenu-play" data-depth="1">
+        <div class="submenu-inner">
+          <div class="submenu-title">Battle Settings</div>
+          <div class="submenu-field">
+            <label class="sub-label" for="battle-team-select">Team</label>
+            <select id="battle-team-select" class="sub-select"
+                    aria-label="Select team for battle"></select>
+          </div>
+          <div class="submenu-field">
+            <label class="sub-label" for="battle-timer-slider">Time Limit</label>
+            <div class="sub-slider-row">
+              <input type="range" id="battle-timer-slider"
+                     min="0" max="300" step="10" value="0" />
+              <span class="sub-slider-val" id="battle-timer-display">Disabled</span>
+            </div>
+          </div>
+          <button class="menu-btn menu-btn--action" id="btn-start-battle">Start Battle &#8250;</button>
+        </div>
+      </div>
+
+      <!-- Submenu: Settings -->
+      <div class="menu-submenu" id="submenu-settings" data-depth="1">
+        <div class="submenu-inner">
+          <div class="submenu-title">Display</div>
+
+          <div class="submenu-field">
+            <label class="sub-label" for="settings-resolution">Resolution</label>
+            <select id="settings-resolution" class="sub-select"
+                    aria-label="Window resolution"></select>
+          </div>
+
+          <div class="submenu-field">
+            <label class="sub-label sub-label--row">
+              <input type="checkbox" id="settings-fullscreen" class="sub-checkbox" />
+              Fullscreen
+            </label>
+          </div>
+
+          <div class="submenu-title submenu-title--gap">Performance</div>
+
+          <div class="submenu-field">
+            <label class="sub-label sub-label--row">
+              <input type="checkbox" id="settings-hwaccel" class="sub-checkbox" />
+              Hardware Acceleration
+              <span class="sub-note">(restart required)</span>
+            </label>
+          </div>
+
+          <button class="menu-btn menu-btn--action" id="btn-apply-settings">
+            Apply &#8250;
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Play -->
+  <div id="view-play" class="view">
+    <div class="view-header">
+      <button class="back-btn" data-view="view-menu">&#8592; Back</button>
+      <h2>Play</h2>
+    </div>
+    <div class="view-content">
+      <button class="menu-btn" data-view="view-battle">Demo Battle</button>
+    </div>
+  </div>
+
+  <!-- Golem Team Builder -->
+  <div id="view-builder" class="view">
+    <div class="view-header">
+      <button class="back-btn" id="btn-builder-back">&#8592; Back</button>
+      <h2>Golem Team Builder</h2>
+    </div>
+    <div class="builder-layout">
+
+      <!-- Top control bar -->
+      <div class="builder-top-bar">
+        <div class="builder-team-controls">
+          <select id="builder-team-select" class="team-select" aria-label="Select team"></select>
+          <button id="builder-new-btn" class="btn-sm">+ New</button>
+        </div>
+        <input id="builder-team-name" type="text" maxlength="32"
+          placeholder="Team name…" class="team-name-input"
+          autocomplete="off" spellcheck="false" />
+        <button id="builder-primary-btn" class="btn-star"
+                title="Set as Primary Team" aria-label="Set as primary team"
+                disabled>☆</button>
+        <div class="builder-form-actions">
+          <button id="builder-save-btn" class="btn-primary" disabled>Save Team</button>
+          <button id="builder-delete-btn" class="btn-danger">Discard</button>
+        </div>
+      </div>
+
+      <!-- Body: element panel (left) + work area (right) -->
+      <div class="builder-body">
+
+        <!-- Left: builder panel (elements grouped by archetype + moves) -->
+        <aside class="builder-panel" id="builder-panel">
+          <div class="panel-section panel-section--elements">
+            <div class="panel-section-hdr">Elements</div>
+            <div id="bay-cards" class="bay-cards"></div>
+          </div>
+          <div class="panel-section panel-section--moves">
+            <div class="panel-section-hdr">Moves</div>
+            <div class="moves-filter-bar" id="moves-filter-bar"></div>
+            <div class="moves-list" id="moves-list"></div>
+          </div>
+        </aside>
+
+        <!-- Right: draft content -->
+        <div class="builder-main">
+          <div id="builder-no-draft" class="builder-no-draft">
+            <p>Select a saved team or create a new one.</p>
+          </div>
+          <div id="golem-row" class="golem-row hidden"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Battle -->
+  <div id="view-battle" class="view">
+    <div class="battle-layout">
+
+      <!-- Left sidebar -->
+      <aside class="battle-sidebar">
+        <div class="bs-top">
+          <button class="back-btn" id="btn-battle-back">&#8592; Menu</button>
+          <div class="bs-stat-row">
+            <span class="bs-stat-label">Round</span>
+            <span class="bs-stat-value" id="b-round">1</span>
+          </div>
+          <div class="bs-stat-row">
+            <span class="bs-stat-label">Time</span>
+            <span class="bs-timer" id="b-timer">—</span>
+          </div>
+        </div>
+        <div class="bs-log-header">Battle Log</div>
+        <div class="battle-log" id="battle-log"></div>
+      </aside>
+
+      <!-- Main: arena + bottom -->
+      <div class="battle-right">
+
+        <section class="battle-arena" id="battle-arena">
+          <div class="arena-enemy-row" id="arena-enemy"></div>
+          <svg class="arena-svg" id="arena-svg" width="100%" height="100%"
+               xmlns="http://www.w3.org/2000/svg"></svg>
+          <div class="arena-player-row" id="arena-player"></div>
+        </section>
+
+        <section class="battle-bottom">
+          <div class="battle-hand" id="battle-hand"></div>
+
+          <div class="battle-action-panel">
+            <div class="bap-hint" id="action-empty-hint">Select a Golem to plan actions.</div>
+            <div class="action-planner hidden" id="action-planner">
+              <div class="ap-header">
+                <span class="ap-golem-label" id="ap-golem-label">—</span>
+                <span class="ap-remaining" id="ap-remaining">—</span>
+              </div>
+              <div class="ap-bar-track"><div class="ap-bar-fill" id="ap-bar-fill"></div></div>
+              <div class="ap-move-row" id="ap-move-row"></div>
+              <div class="ap-tier-row">
+                <button class="tier-btn" data-tier="quick">Quick<small>2 AP</small></button>
+                <button class="tier-btn" data-tier="standard">Standard<small>4 AP</small></button>
+                <button class="tier-btn" data-tier="charged">Charged<small>6 AP</small></button>
+                <button class="tier-btn" data-tier="focused">Focused<small>8 AP</small></button>
+              </div>
+              <div class="ap-def-row" id="ap-def-row"></div>
+              <div class="ap-queue" id="ap-queue"></div>
+            </div>
+            <button class="battle-ready-btn" id="battle-ready-btn" disabled>&#9873;  Ready</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div id="view-settings" class="view">
+    <div class="view-header">
+      <button class="back-btn" data-view="view-menu">&#8592; Back</button>
+      <h2>Settings</h2>
+    </div>
+    <div class="view-content placeholder">
+      <p>Settings coming soon.</p>
+    </div>
+  </div>
+
+  <!-- Wiki -->
+  <div id="view-wiki" class="view">
+    <div class="view-header">
+      <button class="back-btn" data-view="view-menu">&#8592; Back</button>
+      <h2>Wiki</h2>
+    </div>
+    <div class="view-content placeholder">
+      <p>Wiki coming soon.</p>
+    </div>
+  </div>
+
+  <!-- Confirm modal (shared, shown by renderer.js showConfirm()) -->
+  <div id="app-modal" class="modal-overlay" role="dialog" aria-modal="true" hidden>
+    <div class="modal-box">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-body"  id="modal-body"></div>
+      <div class="modal-actions" id="modal-actions"></div>
+    </div>
+  </div>
+
+  <!-- Data layer -->
+  <script src="data/elements.js"></script>
+  <script src="data/golems.js"></script>
+  <script src="data/cards.js"></script>
+  <!-- Combat math (depends on elements.js + golems.js + cards.js) -->
+  <script src="scripts/engine.js"></script>
+  <!-- Shared utilities (no deps) -->
+  <script src="scripts/utils.js"></script>
+  <!-- App state -->
+  <script src="scripts/state.js"></script>
+  <!-- View modules -->
+  <script src="scripts/builder.js"></script>
+  <script src="scripts/battle.js"></script>
+  <!-- Routing (view navigation + submenu system) -->
+  <script src="scripts/renderer.js"></script>
+  <!-- Menu controllers (depends on renderer globals) -->
+  <script src="scripts/menu.js"></script>
+</body>
+</html>
