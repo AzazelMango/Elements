@@ -1,5 +1,5 @@
 /**
- * Elements — Application Configuration
+ * Golemental Arena — Application Configuration
  *
  * All tunable values are gathered here. Edit freely; main.js and preload.js
  * read this file at startup. Renderer-safe values are forwarded via the

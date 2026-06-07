@@ -111,9 +111,9 @@ Repeat until one player has no more Golems left.
 
 ## Win Condition
 
-A Golem is **destroyed** when its HP reaches 0. A player **loses the match** when all 3 of their Golems have been destroyed. All 3 Golems are present on the field for the entire match — there is no swapping or replacement. A Golem that reaches 0 HP remains on the field but cannot act and cannot be targeted.
+A Golem is **destroyed** when its HP reaches 0. A player **loses the match** when all 3 of their Golems have been destroyed. All 3 Golems are present on the field for the entire match — there is no swapping or replacement. A Golem that reaches 0 HP visually remains on the field but cannot act and cannot be targeted.
 
-<!-- TODO: decide whether a destroyed Golem's slot still counts for A1/B1 ordering, or whether slots collapse -->
+###### This does not affect the declaration order — if Player A has 2 Golems left and Player B has 1, the declaration order is still A1, B1, A2, B2, A3, B3; the empty slots are simply skipped over.
 
 ---
 

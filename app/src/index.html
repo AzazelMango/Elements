@@ -21,10 +21,12 @@
       <!-- Primary column -->
       <nav class="menu-col" id="menu-col-primary">
         <button class="menu-btn"
-                data-submenu="submenu-play" data-submenu-depth="1">Play</button>
+                data-submenu="submenu-play" data-submenu-depth="1">Battle
+        </button>
         <button class="menu-btn" data-view="view-builder">Golem Team Builder</button>
         <button class="menu-btn"
-                data-submenu="submenu-settings" data-submenu-depth="1">Settings</button>
+                data-submenu="submenu-settings" data-submenu-depth="1">Settings
+        </button>
         <button class="menu-btn" data-view="view-wiki">Wiki</button>
         <button class="menu-btn menu-btn--danger" id="btn-quit">Exit</button>
       </nav>
@@ -84,6 +86,18 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- Account -->
+    <div class="user-menu">
+      <h4 class="user-name">Azazel Mango</h4>
+      <div class="user-avatar">AM</div>
+    </div>
+    <!-- TODO: Add Offline player data and system; will lead into Online MP. -->
+
+    <!-- Build Info -->
+    <div class="build-info">
+      Build v0.2606.06.00 - Copyright © 2026 Azazel's Den Incorporation, All Rights Reserved. Do not distribute.
     </div>
   </div>
 
@@ -157,7 +171,7 @@
   <div id="view-battle" class="view">
     <div class="battle-layout">
 
-      <!-- Left sidebar -->
+      <!-- Left sidebar: nav + log -->
       <aside class="battle-sidebar">
         <div class="bs-top">
           <button class="back-btn" id="btn-battle-back">&#8592; Menu</button>
@@ -167,16 +181,17 @@
           </div>
           <div class="bs-stat-row">
             <span class="bs-stat-label">Time</span>
-            <span class="bs-timer" id="b-timer">—</span>
+            <span class="bs-timer" id="b-timer">&#8212;</span>
           </div>
         </div>
         <div class="bs-log-header">Battle Log</div>
         <div class="battle-log" id="battle-log"></div>
       </aside>
 
-      <!-- Main: arena + bottom -->
+      <!-- Right: arena + bottom -->
       <div class="battle-right">
 
+        <!-- Arena: enemy top, SVG overlay, player bottom -->
         <section class="battle-arena" id="battle-arena">
           <div class="arena-enemy-row" id="arena-enemy"></div>
           <svg class="arena-svg" id="arena-svg" width="100%" height="100%"
@@ -184,18 +199,41 @@
           <div class="arena-player-row" id="arena-player"></div>
         </section>
 
-        <section class="battle-bottom">
-          <div class="battle-hand" id="battle-hand"></div>
+      </div><!-- /.battle-right -->
+    </div><!-- /.battle-layout -->
+    <!-- Bottom: [Deck | Hand] + [Action Planner] -->
+    <section class="battle-bottom">
 
-          <div class="battle-action-panel">
-            <div class="bap-hint" id="action-empty-hint">Select a Golem to plan actions.</div>
-            <div class="action-planner hidden" id="action-planner">
-              <div class="ap-header">
-                <span class="ap-golem-label" id="ap-golem-label">—</span>
-                <span class="ap-remaining" id="ap-remaining">—</span>
-              </div>
+      <!-- Card area: deck stack (left) + hand row (right) -->
+      <div class="battle-card-area">
+        <div class="bca-deck" id="battle-deck">
+          <div class="bca-deck-stack" id="deck-stack"></div>
+          <div class="bca-deck-label">Deck<div class="bca-deck-count" id="deck-count">&#8212;</div></div>
+        </div>
+        <div class="bca-hand" id="battle-hand"></div>
+      </div>
+
+      <!-- Action planner -->
+      <div class="battle-action-panel">
+        <div class="bap-hint" id="action-empty-hint">Select a Golem to plan actions.</div>
+
+        <div class="action-planner hidden" id="action-planner">
+
+          <!-- AP header spanning full width -->
+          <div class="ap-header">
+            <span class="ap-golem-label" id="ap-golem-label">&#8212;</span>
+            <div class="ap-bar-wrap">
               <div class="ap-bar-track"><div class="ap-bar-fill" id="ap-bar-fill"></div></div>
-              <div class="ap-move-row" id="ap-move-row"></div>
+              <span class="ap-remaining" id="ap-remaining">&#8212;</span>
+            </div>
+          </div>
+          <div class="ap-move-row" id="ap-move-row"></div>
+
+          <!-- Two columns -->
+          <div class="ap-columns">
+
+            <!-- LEFT: ACTIONS -->
+            <div class="ap-col ap-col--attack">
               <div class="ap-tier-row">
                 <button class="tier-btn" data-tier="quick">Quick<small>2 AP</small></button>
                 <button class="tier-btn" data-tier="standard">Standard<small>4 AP</small></button>
@@ -203,15 +241,21 @@
                 <button class="tier-btn" data-tier="focused">Focused<small>8 AP</small></button>
               </div>
               <div class="ap-def-row" id="ap-def-row"></div>
+            </div>
+
+            <!-- RIGHT: QUEUE -->
+            <div class="ap-col ap-col--defense">
               <div class="ap-queue" id="ap-queue"></div>
             </div>
-            <button class="battle-ready-btn" id="battle-ready-btn" disabled>&#9873;  Ready</button>
-          </div>
-        </section>
 
-      </div>
-    </div>
-  </div>
+          </div><!-- /.ap-columns -->
+        </div><!-- /#action-planner -->
+
+        <button class="battle-ready-btn" id="battle-ready-btn" disabled>&#9873; Ready</button>
+      </div><!-- /.battle-action-panel -->
+
+    </section><!-- /.battle-bottom -->
+  </div><!-- /#view-battle -->
 
   <!-- Settings -->
   <div id="view-settings" class="view">

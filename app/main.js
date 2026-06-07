@@ -59,6 +59,9 @@ if (!_hwAccel) {
   app.disableHardwareAcceleration();
 }
 
+// Font rendering — improves antialiasing on Linux/Wayland
+app.commandLine.appendSwitch('font-render-hinting', 'full');
+
 // ── Single-instance lock ───────────────────────────────────────────────────
 if (cfg.app.singleInstance) {
   const gotLock = app.requestSingleInstanceLock();
@@ -97,7 +100,7 @@ function createWindow() {
     titleBarStyle:   cfg.window.titleBarStyle,
     backgroundColor: cfg.window.backgroundColor,
     autoHideMenuBar: cfg.app.autoHideMenuBar,
-    title:           'Golementals',
+    title:           'Golemental Arena',
     // Start hidden — show after content is ready to avoid white flash
     show: false,
 

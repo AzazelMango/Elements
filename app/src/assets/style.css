@@ -30,9 +30,9 @@
   --danger-active:    #7a2020;
   --danger-dim:       #c040401f;
 
-  --arch-stable:   #4caf7d; --arch-stable-dim: #4caf7d1f;
-  --arch-volatile: #c8a043; --arch-volatile-dim: #c8a0431f;
-  --arch-arcane:   #7a5ac0; --arch-arcane-dim: #7a5ac01f;
+  --arch-stb: #4caf7d; --arch-stb-dim: #4caf7d1f;
+  --arch-vol: #c8a043; --arch-vol-dim: #c8a0431f;
+  --arch-arc: #7a5ac0; --arch-arc-dim: #7a5ac01f;
 
   --fre: #b31515; --fre-dim: #b315151f;
   --elc: #e19c11; --elc-dim: #e19c111f;
@@ -56,6 +56,9 @@ html, body {
   overflow: hidden;
   -webkit-user-select: none;
   user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* ── Views ─────────────────────────────────────── */
@@ -101,6 +104,31 @@ html, body {
   flex-direction: column;
   gap: 0.65rem;
   width: 260px;
+}
+
+.user-menu {
+  display: flex;
+  flex-direction: row;
+  gap: 0.65rem;
+  width: 250px;
+  margin: 0.75rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  justify-content: flex-end;
+  border: 1px solid var(--border-dim);
+  background: var(--bg-tertiary);
+}
+ .user-menu * { padding: 0.35rem 0.55rem; font-size: 0.75rem; color: var(--text-primary); border: none; background: none; cursor: pointer; transition: color 0.12s; }
+
+.build-info {
+  margin: 1.5rem;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.08em;
+  position: absolute;
+  bottom: 0;
 }
 
 /* ── Menu shell (primary col + cascading submenus) ─ */
@@ -518,9 +546,9 @@ html, body {
   transition: border-color 0.12s, box-shadow 0.12s;
 }
 
-.golem-card.arch-stable   { border-color: var(--arch-stable);   }
-.golem-card.arch-volatile { border-color: var(--arch-volatile); }
-.golem-card.arch-arcane   { border-color: var(--arch-arcane);   }
+.golem-card.arch-stable   { border-color: var(--arch-stb);   }
+.golem-card.arch-volatile { border-color: var(--arch-vol); }
+.golem-card.arch-arcane   { border-color: var(--arch-arc);   }
 
 .golem-card.drag-over {
   border-color: var(--accent-gold) !important;
@@ -648,6 +676,9 @@ html, body {
 }
 
 .arch-group-hdr {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -656,9 +687,9 @@ html, body {
   border-left: 2px solid transparent;
 }
 
-.arch-group--stable   .arch-group-hdr { color: var(--arch-stable);   border-left-color: var(--arch-stable);   }
-.arch-group--volatile .arch-group-hdr { color: var(--arch-volatile); border-left-color: var(--arch-volatile); }
-.arch-group--arcane   .arch-group-hdr { color: var(--arch-arcane);   border-left-color: var(--arch-arcane);   }
+.arch-group--stable   .arch-group-hdr { color: var(--arch-stb);   border-left-color: var(--arch-stb);   }
+.arch-group--volatile .arch-group-hdr { color: var(--arch-vol); border-left-color: var(--arch-vol); }
+.arch-group--arcane   .arch-group-hdr { color: var(--arch-arc);   border-left-color: var(--arch-arc);   }
 
 .arch-group-grid {
   display: grid;
@@ -777,6 +808,8 @@ html, body {
 }
 
 .mc-badge {
+  display: inline-flex;
+  align-items: center;
   font-size: 0.54rem;
   font-family: monospace;
   font-weight: 700;
@@ -789,9 +822,9 @@ html, body {
   flex-shrink: 0;
 }
 
-.mc-badge.arch-stable   { --el-color: var(--arch-stable);   }
-.mc-badge.arch-volatile { --el-color: var(--arch-volatile); }
-.mc-badge.arch-arcane   { --el-color: var(--arch-arcane);   }
+.mc-badge.arch-stable   { --el-color: var(--arch-stb);   }
+.mc-badge.arch-volatile { --el-color: var(--arch-vol); }
+.mc-badge.arch-arcane   { --el-color: var(--arch-arc);   }
 .mc-badge.mc-badge--gen { --el-color: var(--text-secondary); }
 
 .mc-name {
@@ -819,8 +852,8 @@ html, body {
 }
 
 .mc-rarity--common   { color: var(--text-muted);     }
-.mc-rarity--moderate { color: var(--arch-volatile);  }
-.mc-rarity--rare     { color: var(--arch-arcane);    }
+.mc-rarity--moderate { color: var(--arch-vol);  }
+.mc-rarity--rare     { color: var(--arch-arc);    }
 
 .mc-effect {
   font-size: 0.59rem;
@@ -837,9 +870,9 @@ html, body {
 
 /* Hovering a move card → this golem can use it */
 .golem-card.golem-move-highlight {
-  outline: 2px solid var(--arch-volatile);
+  outline: 2px solid var(--arch-vol);
   outline-offset: 2px;
-  box-shadow: 0 0 10px var(--arch-volatile-dim);
+  box-shadow: 0 0 10px var(--arch-vol-dim);
 }
 
 /* Hovering a golem → these moves are valid for it */
@@ -989,7 +1022,33 @@ html, body {
   border-style: dashed;
 }
 
-/* Icon placeholder (swap for SVG later) */
+/* ── SVG icon base styles ───────────────────────────────── */
+.icon-el,
+.icon-arch,
+.icon-card-type {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Sizes per context */
+.ec-icon .icon-el                       { width: 20px; height: 20px; }
+.arch-group-hdr .icon-arch              { width: 14px; height: 14px; }
+.mf-pill .icon-arch                     { width: 12px; height: 12px; margin-right: 3px; }
+.mf-el-pill .icon-el                    { width: 12px; height: 12px; margin-right: 2px; }
+.mc-badge .icon-el,
+.mc-badge .icon-arch                    { width: 10px; height: 10px; margin-right: 2px; }
+.bgc-el .icon-el                        { width: 11px; height: 11px; margin-right: 2px; }
+.bc-type-icon .icon-card-type           { width: 14px; height: 14px; }
+.bc-target-chip .icon-el,
+.bc-target-chip .icon-arch              { width: 11px; height: 11px; margin-right: 2px; }
+.apmb-el .icon-el,
+.apmb-el .icon-arch                     { width: 13px; height: 13px; margin-right: 3px; }
+
+/* Element slot icon container */
 .ec-icon {
   width: 22px;
   height: 22px;
@@ -998,12 +1057,12 @@ html, body {
   justify-content: center;
 }
 
+/* Keep placeholder for cases where no SVG is available */
 .ec-icon-placeholder {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   background: var(--el-color, var(--text-muted));
-  /* fully opaque — the dot is the primary colour indicator */
   opacity: 1;
   box-shadow: 0 0 6px var(--el-color, transparent);
 }
@@ -1294,97 +1353,11 @@ html, body {
   overflow: visible;
 }
 
-/* ── Arena Golem cards ──────────────────────────────────── */
-
-.arena-golem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-dim);
-  padding: 0.8rem 1rem;
-  width: 145px;
-  cursor: pointer;
-  transition: border-color 0.12s, box-shadow 0.15s;
-  position: relative;
-}
-
-.ag-enemy:hover  { border-color: var(--arch-volatile); }
-.ag-player:hover { border-color: var(--accent-dim); }
-
-.ag-selected {
-  border-color: var(--accent-gold) !important;
-  box-shadow: 0 0 18px rgba(200, 160, 67, 0.28);
-}
-
-.ag-defeated {
-  opacity: 0.3;
-  cursor: default;
-  border-style: dashed;
-  pointer-events: none;
-}
-
-.ag-pairing {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.ag-el {
-  font-family: monospace;
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.ag-el.arch-stable   { color: var(--arch-stable);   }
-.ag-el.arch-volatile { color: var(--arch-volatile); }
-.ag-el.arch-arcane   { color: var(--arch-arcane);   }
-
-.ag-sep {
-  font-size: 0.8rem;
-  color: var(--border-dim);
-}
-
-.ag-hp-bar {
-  width: 100%;
-  height: 7px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-dim);
-}
-
-.ag-hp-fill {
-  height: 100%;
-  transition: width 0.4s ease;
-}
+/* ── HP fill colours (shared by arena + bgc) ───────────── */
 
 .hp-hi  { background: #4caf7d; }
 .hp-mid { background: #c8a043; }
 .hp-lo  { background: #c04040; }
-
-.ag-hp-num {
-  font-size: 0.63rem;
-  font-family: monospace;
-  color: var(--text-muted);
-}
-
-.ag-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.15rem;
-  justify-content: center;
-  min-height: 1rem;
-}
-
-.ag-badge {
-  font-size: 0.58rem;
-  font-family: monospace;
-  padding: 0.06rem 0.22rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--accent-dim);
-  color: var(--accent-gold);
-}
 
 /* ── Damage float ───────────────────────────────────────── */
 
@@ -1408,62 +1381,26 @@ html, body {
 /* ── Battle bottom bar ─────────────────────────────────── */
 
 .battle-bottom {
-  height: 200px;
+  height: 220px;
   flex-shrink: 0;
   border-top: 1px solid var(--border-dim);
   display: flex;
+  gap: 0.5rem;
   overflow: hidden;
-}
-
-/* ── Card hand ───────────────────────────────────────────── */
-
-.battle-hand {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1.25rem;
-  border-right: 1px solid var(--border-dim);
-}
-
-.hand-card {
-  width: 76px;
-  height: 108px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-dim);
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0.4rem;
-  cursor: pointer;
-  transition: border-color 0.12s, transform 0.15s;
-  text-align: center;
-}
-
-.hand-card:hover {
-  border-color: var(--accent-dim);
-  transform: translateY(-6px);
-}
-
-.hc-name {
-  font-size: 0.68rem;
-  color: var(--text-primary);
-  line-height: 1.3;
 }
 
 /* ── Action panel ───────────────────────────────────────── */
 
 .battle-action-panel {
-  width: 290px;
+  width: 500px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   padding: 0.6rem 0.75rem 0.55rem;
   gap: 0.38rem;
   overflow: hidden;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-dim);
 }
 
 .bap-hint {
@@ -1487,8 +1424,19 @@ html, body {
 
 .ap-header {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding-bottom: 0.22rem;
+  border-bottom: 1px solid var(--border-dim);
+  margin-bottom: 0.22rem;
+}
+
+.ap-bar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .ap-golem-label {
@@ -1524,7 +1472,9 @@ html, body {
   flex-shrink: 0;
 }
 
-.tier-btn {
+/* Tier and defense buttons share the same base token */
+.tier-btn,
+.def-btn {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -1533,14 +1483,16 @@ html, body {
   padding: 0.3rem 0.1rem;
   background: var(--bg-secondary);
   border: 1px solid var(--border-dim);
+  border-radius: 3px;
   color: var(--text-muted);
   font-size: 0.68rem;
   letter-spacing: 0.03em;
   cursor: pointer;
-  transition: all 0.1s;
+  transition: border-color 0.1s, color 0.1s, background 0.1s;
 }
 
-.tier-btn small {
+.tier-btn small,
+.def-btn small {
   font-size: 0.58rem;
   color: var(--text-muted);
   display: block;
@@ -1551,14 +1503,39 @@ html, body {
   border-color: var(--accent-gold);
   color: var(--accent-gold);
 }
-
 .tier-btn.active small { color: var(--accent-dim); }
-.tier-btn:disabled     { opacity: 0.32; cursor: not-allowed; }
 
-.tier-btn:hover:not(:disabled):not(.active) {
+.tier-btn:disabled,
+.def-btn:disabled     { opacity: 0.32; cursor: not-allowed; }
+
+.tier-btn:hover:not(:disabled):not(.active),
+.def-btn:hover:not(:disabled) {
   border-color: var(--accent-dim);
   color: var(--text-primary);
 }
+
+/* Defense sub-row container */
+.ap-def-row-inner {
+  display: flex;
+  gap: 0.22rem;
+}
+
+.ap-def-current {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+}
+
+.def-cancel-btn {
+  font-size: 0.62rem;
+  padding: 0.12rem 0.45rem;
+  background: none;
+  border: 1px solid #8f0000;
+  border-radius: 3px;
+  color: #ff6b6b;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.def-cancel-btn:hover { background: rgba(211,13,13,0.15); }
 
 /* ── Action queue ────────────────────────────────────────── */
 
@@ -1596,10 +1573,10 @@ html, body {
   flex-shrink: 0;
 }
 
-.qi-quick    { border-color: var(--arch-stable);   color: var(--arch-stable);   }
+.qi-quick    { border-color: var(--arch-stb);   color: var(--arch-stb);   }
 .qi-standard { border-color: var(--text-muted);    color: var(--text-muted);    }
-.qi-charged  { border-color: var(--arch-volatile); color: var(--arch-volatile); }
-.qi-focused  { border-color: var(--arch-arcane);   color: var(--arch-arcane);   }
+.qi-charged  { border-color: var(--arch-vol); color: var(--arch-vol); }
+.qi-focused  { border-color: var(--arch-arc);   color: var(--arch-arc);   }
 
 .qi-arrow  { color: var(--text-muted); }
 .qi-target { flex: 1; color: var(--text-primary); }
@@ -1640,4 +1617,579 @@ html, body {
 .battle-ready-btn:disabled {
   opacity: 0.32;
   cursor: not-allowed;
+}
+
+/* ── AP planner ──────────────────────────────────────────────── */
+
+.ap-columns {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ap-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.ap-col--defense { flex: 0 0 auto; min-width: 120px; }
+
+.ap-col-hdr {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-dim);
+  padding-bottom: 0.18rem;
+  flex-shrink: 0;
+}
+
+.ap-row {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+/* ── Move picker buttons ─────────────────────────────────────────────── */
+
+.ap-move-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.22rem;
+  flex-shrink: 0;
+}
+
+.ap-move-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.24rem;
+  padding: 0.22rem 0.38rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  transition: border-color 0.1s, color 0.1s, background 0.1s;
+}
+
+.ap-move-btn:hover:not(:disabled) {
+  border-color: var(--accent-dim);
+  color: var(--text-primary);
+}
+
+.ap-move-btn.active {
+  background: var(--bg-card);
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
+}
+
+/* Element tag inside move button — colour driven by --apmb-el-col (set via JS) */
+.apmb-el {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.03em;
+  padding: 0.05rem 0.16rem;
+  border-radius: 2px;
+  background: rgba(0,0,0,0.32);
+  color: var(--apmb-el-col, var(--text-muted));
+}
+.apmb-el.arch-volatile { color: var(--arch-vol); }
+.apmb-el.arch-arcane   { color: var(--arch-arc);   }
+.apmb-el.arch-stable   { color: var(--arch-stb);   }
+
+.apmb-name {
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.apmb-pwr {
+  font-family: monospace;
+  font-size: 0.57rem;
+  color: var(--text-muted);
+  margin-left: auto;
+  padding-left: 0.3rem;
+}
+
+.ap-move-label--empty { color: var(--text-muted); font-size: 0.72rem; font-style: italic; }
+
+/* ── Battle Golem Card (bgc) ─────────────────────────────────────────── */
+.bgc-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.3rem 0.4rem;
+}
+
+.bgc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  /* Gradient border via padding-box / border-box trick.
+     --bgc-dom / --bgc-pas (dim)   → subtle card bg tint
+     --bgc-col-dom / --bgc-col-pas → vivid gradient border
+     All four vars are set on the element via JS postRenderGolemCards() */
+  background:
+    linear-gradient(160deg,
+      color-mix(in srgb, var(--bgc-dom, transparent) 6%, var(--bg-card)),
+      color-mix(in srgb, var(--bgc-pas, transparent) 6%, var(--bg-card))
+    ) padding-box,
+    linear-gradient(160deg,
+      var(--bgc-col-dom, var(--border-dim)),
+      var(--bgc-col-pas, var(--border-dim))
+    ) border-box;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+  min-width: fit-content;
+  position: relative;
+  transition: outline 0.1s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.bgc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  background: var(--bg-tertiary);
+  padding: 0.3rem 0.35rem;
+  width: 200px;
+}
+
+.bgc-body {
+  display: flex;
+  flex-direction: row;
+  gap: 0.3rem;
+}
+
+.bgc--player:hover { outline: 1px solid var(--accent-dim); outline-offset: 1px; }
+.bgc--enemy:hover  { outline: 1px solid var(--arch-vol); outline-offset: 1px; }
+.bgc--selected     { outline: 2px solid var(--accent-gold); outline-offset: 2px; box-shadow: 0 0 16px rgba(200,160,67,0.25); }
+.bgc--defeated     { opacity: 0.3; cursor: default; border-style: dashed; pointer-events: none; }
+.bgc--curse-target { outline: 2px dashed #8f0000; outline-offset: 2px; }
+
+/* Border glow — each effect gets its own absolutely-positioned span inside .bgc,
+   so animations are fully independent and never conflict with each other. */
+.bgc-effect-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+.bgc-effect-glow--curse   { animation: bgcGlowCurse   2.0s ease-in-out infinite; }
+.bgc-effect-glow--enchant { animation: bgcGlowEnchant 2.6s ease-in-out infinite; }
+.bgc-effect-glow--special { animation: bgcGlowSpecial 2.3s ease-in-out infinite; }
+
+@keyframes bgcGlowCurse {
+  0%, 100% { box-shadow: 0 0  4px 1px rgba(211,  13,  13, 0.25); }
+  50%      { box-shadow: 0 0 14px 4px rgba(211,  13,  13, 0.65); }
+}
+@keyframes bgcGlowEnchant {
+  0%, 100% { box-shadow: 0 0  4px 1px rgba( 18, 177,  18, 0.25); }
+  50%      { box-shadow: 0 0 14px 4px rgba( 18, 177,  18, 0.65); }
+}
+@keyframes bgcGlowSpecial {
+  0%, 100% { box-shadow: 0 0  4px 1px rgba(141,  10, 139, 0.25); }
+  50%      { box-shadow: 0 0 14px 4px rgba(141,  10, 139, 0.65); }
+}
+
+/* Header row */
+.bgc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.bgc-name { font-size: 0.72rem; font-weight: 700; font-family: monospace; }
+
+.bgc-tier {
+  font-size: 0.56rem;
+  font-weight: 700;
+  padding: 0.07rem 0.28rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.bgc-tier--T1 { background: var(--accent-gold); color: #000; }
+.bgc-tier--T2 { background: #888; color: #fff; }
+.bgc-tier--T3 { background: #444; color: #aaa; }
+
+/* Swatch frame: gradient set via JS setProperty(--bgc-dom / --bgc-pas) */
+.bgc-frame {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 3px;
+  background: linear-gradient(130deg,
+    var(--bgc-dom, var(--bg-secondary)) 0%,
+    var(--bgc-pas, var(--bg-tertiary)) 100%);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.bgc-el {
+  display: flex;
+  align-items: center;
+  font-size: 0.52rem;
+  font-weight: 700;
+  padding: 0.1rem 0.2rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  gap: 2px;
+}
+.bgc-el.arch-stable   { color: var(--arch-stb);   }
+.bgc-el.arch-volatile { color: var(--arch-vol); }
+.bgc-el.arch-arcane   { color: var(--arch-arc);   }
+
+/* HP bar — width driven by --hp-pct CSS var (set via JS) */
+/* HP bar — row layout: "HP" label + track. Fraction overlaid on left of track. */
+.bgc-hp {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.bgc-hp-label {
+  font-size: 0.52rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.bgc-hp-track {
+  flex: 1;
+  position: relative;
+  height: 16px;
+  background: var(--bg-secondary);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.bgc-hp-fill {
+  position: absolute;
+  inset: 0;
+  width: var(--hp-pct, 100%);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+/* Fraction overlaid on the bar, inset from the left */
+.bgc-hp-text {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.54rem;
+  font-family: monospace;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 5px rgba(0,0,0,0.7);
+  line-height: 1;
+  z-index: 1;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Stats row */
+.bgc-stats { display: flex; gap: 0.45rem; font-size: 0.6rem; }
+.bgc-stat--atk { color: #e57373; }
+.bgc-stat--def { color: #64b5f6; }
+.bgc-stat--ap  { color: var(--accent-gold); }
+
+/* Equipment slots */
+.bgc-equip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+}
+
+.bgc-slot {
+  width: 22px;
+  height: 22px;
+  border: 1px dashed var(--border-dim);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color 0.1s, background 0.1s;
+  cursor: default;
+}
+.bgc-slot-name { font-size: 0.42rem; line-height: 1; color: var(--text-muted); overflow: hidden; width: 100%; text-align: center; }
+
+/* Per-slot type colour border */
+.bgc-slot[data-slot-key="primary"],
+.bgc-slot[data-slot-key="secondary"] { border-color: #060671; }
+.bgc-slot[data-slot-key="armour"]    { border-color: #555;    }
+.bgc-slot[data-slot-key="enchant"]   { border-color: #066506; }
+.bgc-slot[data-slot-key="curse"]     { border-color: #8f0000; }
+
+/* Latent curse slots fade until filled */
+.bgc-slot--latent:not(.bgc-slot--filled) { opacity: 0.28; border-style: dotted; }
+
+/* Valid drop hover */
+.bgc-slot--hover {
+  border-style: solid;
+  background: color-mix(in srgb, var(--accent-gold) 20%, var(--bg-secondary));
+}
+
+/* Filled slots */
+.bgc-slot--filled                 { border-style: solid; cursor: pointer; }
+.bgc-slot--filled.bc--curse       { border-color: #8f0000; background: rgba(211,13,13,0.18); }
+.bgc-slot--filled.bc--enchantment { border-color: #066506; background: rgba(18,177,18,0.18); }
+.bgc-slot--filled.bc--item        { border-color: #060671; background: rgba(10,44,192,0.18); }
+.bgc-slot--filled.bc--special     { border-color: #4e024d; background: rgba(141,10,139,0.18); }
+
+/* Shimmer on filled effect slots */
+.bgc-slot--filled.bc--curse::before,
+.bgc-slot--filled.bc--enchantment::before,
+.bgc-slot--filled.bc--special::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background-image: linear-gradient(105deg,
+    transparent 25%, rgba(255, 255, 255, 0.4) 50%, transparent 75%);
+  background-size: 300% 100%;
+  animation: bgcShimmer 2s linear infinite;
+  pointer-events: none;
+}
+
+/* Queued action badges */
+.bgc-badges { display: flex; flex-wrap: wrap; gap: 0.14rem; min-height: 0; }
+
+.bgc-badge {
+  font-size: 0.52rem;
+  font-family: monospace;
+  padding: 0.08rem 0.22rem;
+  border-radius: 2px;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.bgc-badge--def { background: #0d2740; color: #90caf9; }
+.bgc-badge--atk { background: #2a0d0d; color: #ef9a9a; }
+
+/* ── Hand cards (bc system) ──────────────────────────────────────────── */
+
+.bc {
+  display: flex;
+  flex-direction: column;
+  width: 112px;
+  min-height: 180px;
+  border: 2px solid var(--card-border, var(--border-dim));
+  border-radius: 4px;
+  background: var(--card-bg-tint, var(--bg-card));
+  padding: 0;
+  cursor: grab;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.bc:active { cursor: grabbing; }
+.bc:hover  { transform: translateY(-7px); box-shadow: 0 8px 18px rgba(0,0,0,0.45); z-index: 10; }
+
+/* Per-type border + tint */
+.bc--curse       { --card-border: #8f0000; --card-bg-tint: rgba(211,13,13,0.10); }
+.bc--enchantment { --card-border: #066506; --card-bg-tint: rgba(18,177,18,0.10);  }
+.bc--item        { --card-border: #060671; --card-bg-tint: rgba(10,44,192,0.10);  }
+.bc--special     { --card-border: #4e024d; --card-bg-tint: rgba(141,10,139,0.10); }
+
+/* Row 1: Type label + Icon */
+.bc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2rem 0.28rem 0.16rem;
+  border-bottom: 1px solid var(--card-border, var(--border-dim));
+  flex-shrink: 0;
+}
+
+.bc-type-label {
+  font-size: 0.46rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--card-border, var(--text-muted));
+  line-height: 1;
+}
+
+.bc-type-icon {
+  font-size: 0.76rem;
+  line-height: 1;
+}
+
+/* Row 2: Art block inset with side padding */
+.bc-art-wrap {
+  padding: 0.22rem 0.32rem;
+  flex-shrink: 0;
+}
+
+.bc-art {
+  height: 48px;
+  background: var(--bg-secondary);
+  border-radius: 2px;
+  border: 1px solid var(--card-border, var(--border-dim));
+  opacity: 0.6;
+}
+
+/* Row 3: Affinity chips */
+.bc-targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.16rem;
+  padding: 0 0.28rem 0.2rem;
+  flex-shrink: 0;
+}
+
+.bc-target-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.46rem;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.04em;
+  padding: 0.06rem 0.18rem;
+  border-radius: 2px;
+  background: rgba(0,0,0,0.28);
+  line-height: 1.4;
+  border: 1px solid transparent;
+}
+
+.bc-target-arch.arch-stable   { color: var(--arch-stb);   border-color: var(--arch-stb);   }
+.bc-target-arch.arch-volatile { color: var(--arch-vol); border-color: var(--arch-vol); }
+.bc-target-arch.arch-arcane   { color: var(--arch-arc);   border-color: var(--arch-arc);   }
+.bc-target-el    { color: var(--bc-el-col, var(--text-muted)); border-color: var(--bc-el-col, var(--border-dim)); }
+.bc-target-global { color: var(--text-muted); border-color: var(--border-dim); }
+
+/* Rows 4–5: Name + Description */
+.bc-name {
+  font-size: 0.56rem;
+  font-weight: 700;
+  line-height: 1.25;
+  padding: 0 0.28rem 0.1rem;
+  color: var(--text-primary);
+}
+
+.bc-desc {
+  font-size: 0.47rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+  padding: 0 0.28rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Row 6: Tags (Effects) */
+.bc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.12rem;
+  padding: 0.16rem 0.28rem 0.2rem;
+  border-top: 1px solid var(--card-border, var(--border-dim));
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.bc-tag {
+  font-size: 0.42rem;
+  font-family: monospace;
+  padding: 0.04rem 0.14rem;
+  border-radius: 2px;
+  line-height: 1.4;
+}
+.bc-tag--self   { background: rgba(100,181,246,0.15); color: #90caf9; }
+.bc-tag--target { background: rgba(239,154,154,0.15); color: #ef9a9a; }
+
+/* Face-down deck card (offset via --stack-i set via JS) */
+.bc-facedown {
+  position: absolute;
+  width: 96px;
+  height: 156px;
+  border: 2px solid var(--border-dim);
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+  top:  calc(var(--stack-i, 0) * -3px);
+  left: calc(var(--stack-i, 0) *  2px);
+}
+
+/* ── Battle card area (deck + hand) ─────────────────────────────────── */
+
+.battle-card-area {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.65rem;
+  padding: 0.5rem 0.6rem;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  border-right: 1px solid var(--border-dim);
+  overflow: hidden;
+}
+
+.bca-deck {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.22rem;
+  flex-shrink: 0;
+}
+
+.bca-deck-label {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.bca-deck-stack {
+  position: relative;
+  width: 96px;
+  height: 156px;
+}
+
+.bca-deck-count {
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--text-secondary);
+}
+
+.bca-hand {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 0.4rem;
+  overflow-y: hidden;
+  overflow-x: auto;
+  border: 1px solid var(--accent-gold);
 }

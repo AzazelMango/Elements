@@ -1,10 +1,10 @@
 {
-  "name": "elements",
-  "version": "0.1.0",
-  "description": "Elements Card Battle Game",
+  "name": "golement_arena",
+  "version": "0.2606.06.00",
+  "description": "Golement Arena",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "node launcher.js"
   },
   "devDependencies": {
     "electron": "^42.0.0"

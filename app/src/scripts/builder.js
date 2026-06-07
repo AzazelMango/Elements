@@ -48,6 +48,7 @@
 
   // ── Rendering ─────────────────────────────────────────────────────────────
 
+
   function renderTeamSelect() {
     const teams  = State.getTeams();
     const draft  = State.getDraft();
@@ -159,7 +160,7 @@
           <span class="slot-role-label">${label}</span>
           <div class="elem-card ${elClass(el.id)}" draggable="true"
                data-golem="${golem}" data-role="${role}" data-element="${esc(el.id)}">
-            <div class="ec-icon"><div class="ec-icon-placeholder"></div></div>
+            <div class="ec-icon">${Utils.elIconHtml(el.id)}</div>
             <span class="ec-id">${esc(el.id)}</span>
             <span class="ec-name">${esc(el.name)}</span>
           </div>
@@ -181,7 +182,8 @@
       groupEl.className = `arch-group arch-group--${arch.toLowerCase()}`;
       const hdrEl   = document.createElement('div');
       hdrEl.className   = 'arch-group-hdr';
-      hdrEl.textContent = arch;
+      const archAbbr2 = window.ARCHETYPE_ABBR?.[arch] ?? '';
+      hdrEl.innerHTML = `${Utils.archIconHtml(archAbbr2)}<span>${esc(arch)}</span>`;
       const gridEl  = document.createElement('div');
       gridEl.className  = 'arch-group-grid';
       groupEl.appendChild(hdrEl);
@@ -195,7 +197,7 @@
         card.dataset.element = el.id;
         const badge = avail > 1 ? `<span class="bay-stack-count">${avail}x</span>` : '';
         card.innerHTML =
-          `<div class="ec-icon"><div class="ec-icon-placeholder"></div></div>` +
+          `<div class="ec-icon">${Utils.elIconHtml(el.id)}</div>` +
           `<span class="ec-id">${esc(el.id)}</span>` +
           `<span class="ec-name">${esc(el.name)}</span>` +
           badge;
@@ -213,10 +215,12 @@
     if (!$movesFilterBar) return;
     const f = _moveFilter;
 
+    const ARCH_ABBR_MAP = { stable: 'STB', volatile: 'VOL', arcane: 'ARC' };
     const archPills = ['all', 'stable', 'volatile', 'arcane', 'general'].map(a => {
       const isActive = a === 'all' ? !f.archetype : f.archetype === a;
       const label    = a === 'all' ? 'All' : a[0].toUpperCase() + a.slice(1);
-      return `<button class="mf-pill${isActive ? ' mf-pill--active' : ''}" data-arch="${a}">${label}</button>`;
+      const iconHtml = ARCH_ABBR_MAP[a] ? Utils.archIconHtml(ARCH_ABBR_MAP[a]) : '';
+      return `<button class="mf-pill${isActive ? ' mf-pill--active' : ''}" data-arch="${a}">${iconHtml}${label}</button>`;
     }).join('');
 
     const validActive = f.validOnly ? ' mf-pill--active' : '';
@@ -228,7 +232,7 @@
         .filter(e => e.archetype === arch)
         .map(el => {
           const act = f.element === el.id ? ' mf-el-pill--active' : '';
-          return `<button class="mf-el-pill ${elClass(el.id)}${act}" data-el="${esc(el.id)}">${esc(el.id)}</button>`;
+          return `<button class="mf-el-pill ${elClass(el.id)}${act}" data-el="${esc(el.id)}">${Utils.elIconHtml(el.id)}<span>${esc(el.id)}</span></button>`;
         }).join('');
       elRow = `<div class="mf-el-row">${pills}</div>`;
     }
@@ -305,6 +309,11 @@
         ? elClass(m.element)
         : m.archetype ? `arch-${m.archetype}` : 'mc-badge--gen';
       const badgeText = m.element ?? (m.archetype ? m.archetype.slice(0, 3).toUpperCase() : 'GEN');
+      const badgeIcon = m.element
+        ? Utils.elIconHtml(m.element)
+        : m.archetype
+          ? Utils.archIconHtml(window.ARCHETYPE_ABBR?.[m.archetype[0].toUpperCase() + m.archetype.slice(1)] ?? '')
+          : '<img src="assets/icons/GEN.svg" class="icon-el" alt="GEN" draggable="false">';
       const rarityKey = m.rarity[0].toUpperCase();
       const assignedCls = assignedSet.has(m.id) ? ' moves-card--assigned' : '';
       const selectableCls = selG ? ' moves-card--selectable' : '';
@@ -312,7 +321,7 @@
         <div class="moves-card${assignedCls}${selectableCls}" draggable="true" data-move-id="${esc(m.id)}"
              data-element="${esc(m.element ?? '')}" data-pool="${esc(m.pool ?? '')}">
           <div class="mc-top">
-            <span class="mc-badge ${badgeCls}">${esc(badgeText)}</span>
+            <span class="mc-badge ${badgeCls}">${badgeIcon}${esc(badgeText)}</span>
             <span class="mc-name">${esc(m.name)}</span>
             <span class="mc-pwr">${m.movePower !== null ? m.movePower.toFixed(2) : '\u2014'}</span>
             <span class="mc-rarity mc-rarity--${m.rarity}">${rarityKey}</span>

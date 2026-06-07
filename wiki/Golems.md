@@ -51,16 +51,16 @@ Players are given two of each element to build 3 Golems. This way players can ei
 
 In the **Golem Builder**, each Golem is assigned a Move List and Enchantment loadout based on its **Breed Tier**, determined by the relationship between its Dominant and Passive Elements:
 
-| Axis                 | T1 — Purebreed             | T2 — Crossbreed              | T3 — Hybrid                  |
-|----------------------|--------------------------|-----------------------------|------------------------------|
-| **Condition**        | DOM = PAS (same element) | DOM/PAS share Architype     | DOM/PAS from diff Architypes |
-| **Move Slots**       | 4                        | 4                           | 5                            |
-| **Enchant Slots**    | 1                        | 2                           | 2                            |
+| Axis                 | T1 — Purebreed                   | T2 — Crossbreed                  | T3 — Hybrid                      |
+|----------------------|----------------------------------|----------------------------------|----------------------------------|
+| **Condition**        | DOM = PAS (same element)         | DOM/PAS share Architype          | DOM/PAS from diff Architypes     |
+| **Move Slots**       | 4                                | 4                                | 5                                |
+| **Enchant Slots**    | 1                                | 2                                | 2                                |
 | **Item Slots**       | 3 (Primary + Secondary + Armour) | 3 (Primary + Secondary + Armour) | 3 (Primary + Secondary + Armour) |
-| **Hand Size**        | 5                        | 6                           | 7                            |
-| **Card Draw**        | Rare-weighted            | Base                        | Base                         |
-| **Stat Bonus**       | +2 AP, ATK, DEF          | +1 AP, ATK, DEF             | +0 (base stats)              |
-| **Neutral Penalty**  | 0-score matchups → -1    | None                        | None                         |
+| **Hand Size**        | 5                                | 6                                | 7                                |
+| **Card Draw**        | Rare-weighted                    | Base                             | Base                             |
+| **Stat Bonus**       | +4 AP, ATK, DEF                  | +2 AP, ATK, DEF                  | +0 (base stats)                  |
+| **Neutral Penalty**  | 0-score matchups → -1            | None                             | None                             |
 
 - **T1** — fewest build options but the strongest card layer; punished by neutral matchups, rewarded by favourable ones
 - **T2** — balanced in builder and battle; extra Enchant slot rewards pre-match setup strategy
